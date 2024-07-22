@@ -45,7 +45,7 @@ def display_images(image_paths):
             st.image(image, caption=path)
     
     with col2:
-        for path in image_paths[len(image_paths)//2]:
+        for path in image_paths[:len(image_paths)//2]:
             image = Image.open(path)
             st.image(image, caption=path)
 
