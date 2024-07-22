@@ -1,9 +1,7 @@
 import streamlit as st
 import numpy as np
-import pandas as pd
 from keras.models import load_model
 import joblib
-import matplotlib.pyplot as plt
 from PIL import Image
 
 # Load the saved models
@@ -42,12 +40,12 @@ def display_images(image_paths):
     col1, col2 = st.columns(2)
     
     with col1:
-        for path in image_paths[:len(image_paths)//2]:
+        for path in image_paths[len(image_paths)//2:]:
             image = Image.open(path)
             st.image(image, caption=path)
     
     with col2:
-        for path in image_paths[len(image_paths)//2:]:
+        for path in image_paths[len(image_paths)//2]:
             image = Image.open(path)
             st.image(image, caption=path)
 
