@@ -1,26 +1,37 @@
 import numpy as np
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+from keras.models import load_model
+from keras.preprocessing.sequence import pad_sequences
 
-# Load the saved model
-model = load_model('model/gender_prediction.h5')
+# Load model yang sudah disimpan
+model = load_model('model/lstm.h5')
 
-# Function to preprocess a single name
+# Fungsi Preprocessing
 def preprocess_name(name, max_len=20):
     name = name.lower()
     name_array = [max(0.0, ord(char) - 96.0) for char in name]
     name_array = name_array + [0.0] * (max_len - len(name_array))  # Pad to max_len
     return np.array(name_array).reshape(1, -1)
 
-# Predict function
+# Fungsi Prediksi
 def predict_gender(name):
     name_array = preprocess_name(name)
     prediction = model.predict(name_array)
-    predicted_class = int(round(prediction[0][0]))
-    return 'Laki-Laki' if prediction == 1 else 'Perempuan'
+    prediction_prob = prediction[0][0]
+    predicted_class = int(round(prediction_prob))
+    
+    if predicted_class == 1:
+        gender = 'Laki-Laki'
+        confidence_score = prediction_prob
 
-# Example prediction
-name = "Zee"  # Ganti dengan nama lain untuk prediksi
-predicted_gender = predict_gender(name)
+    else:
+        gender = 'Perempuan'
+        confidence_score = 1 - prediction_prob
+
+    return gender, confidence_score
+
+# Contoh
+name = "Putri"
+predicted_gender, confidence_score = predict_gender(name)
 print(f"Nama: {name}")
 print(f"Prediksi Jenis Kelamin: {predicted_gender}")
+print(f"Confidence Score: {confidence_score:.2f}")
